@@ -4,7 +4,7 @@ from datetime import datetime, timedelta
 # Initial setup
 api_host = 'https://dashboard.signalsciences.net'
 email = os.environ.get('SIGSCI_EMAIL')
-password = os.environ.get('SIGSCI_PASSWORD')
+token = os.environ.get('SIGSCI_TOKEN')
 corp_name = 'testcorp'
 site_name = 'www.mysite.com'
 
@@ -15,26 +15,11 @@ from_time = until_time - timedelta(hours=1)
 until_time = calendar.timegm(until_time.utctimetuple())
 from_time = calendar.timegm(from_time.utctimetuple())
 
-# Authenticate
-auth = requests.post(
-    api_host + '/api/v0/auth',
-    data = {"email": email, "password": password}
-)
-
-if auth.status_code == 401:
-    print 'Invalid login.'
-    sys.exit()
-elif auth.status_code != 200:
-    print 'Unexpected status: %s response: %s' % (auth.status_code, auth.text)
-    sys.exit()
-
-parsed_response = auth.json()
-token = parsed_response['token']
-
 # Loop across all the data and output it in one big JSON object
 headers = {
     'Content-type': 'application/json',
-    'Authorization': 'Bearer %s' % token
+    'x-api-user': '%s' % email,
+    'x-api-token': '%s' % token
 }
 url = api_host + ('/api/v0/corps/%s/sites/%s/feed/requests?from=%s&until=%s' % (corp_name, site_name, from_time, until_time))
 first = True
