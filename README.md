@@ -1,4 +1,4 @@
-# signalsciences
+# Signal Sciences Data Extraction using Python
 Export the requests
 Main script forked from https://docs.signalsciences.net/developer/extract-your-data/#example-usage
 
